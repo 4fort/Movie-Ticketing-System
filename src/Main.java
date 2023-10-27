@@ -34,10 +34,10 @@ public class Main {
         //  DECLARATIONS OF VARIABLES
         boolean isContinue = true;  // USED FOR WHILE LOOP CONDITION
         int movieChoice;    // USED FOR $movies[] (1-5) CHOICE USER INPUT
-        int movieTypeChoice = 0; // USED FOR $MOVIE_TYPE[] (1-3) CHOICE USER INPUT
-        int ticketCount = 0;    // USED FOR AMOUNT OF TICKETS USER WILL BUY
-        double payment = 0;   // USED FOR USER PAYMENT
-        double change = -1;  // USED FOR PAYMENT CHANGE
+        int movieTypeChoice; // USED FOR $MOVIE_TYPE[] (1-3) CHOICE USER INPUT
+        int ticketCount;    // USED FOR AMOUNT OF TICKETS USER WILL BUY
+        double payment;   // USED FOR USER PAYMENT
+        double change;  // USED FOR PAYMENT CHANGE
 
         // while loop for the whole program
         while (isContinue) {
@@ -86,7 +86,6 @@ public class Main {
                         // if user input is more than available tickets, program will repeat loop
                         if (ticketCount > movies[movieChoice - 1].getTicketsAvailable()) {
                             System.out.println(ANSI_RED_BG + movies[movieChoice - 1].getTicketsAvailable() + " tickets are left!" + ANSI_RESET + " Please input the right number of tickets.");
-                            ticketCount = 0;    // resets ticketCount to 0 so error will not occur on next loop
                             continue;
                         }
                         break;
@@ -119,8 +118,6 @@ public class Main {
                     // prints change
                     System.out.println("Change: Php" + change);
                     System.out.println(ANSI_GREEN + "Thank you for your purchase!" + ANSI_RESET);
-                    payment = 0; // resets payment to 0
-                    change = 0; // resets change to 0
                     transactions.setTotalAmount(0);
                 } else {
                     System.out.println(ANSI_RED_BG + "Select from the following only!" + ANSI_RESET);
