@@ -36,6 +36,7 @@ public class Main {
         int movieChoice;    // USED FOR $movies[] (1-5) CHOICE USER INPUT
         int movieTypeChoice = 0; // USED FOR $MOVIE_TYPE[] (1-3) CHOICE USER INPUT
         int ticketCount = 0;    // USED FOR AMOUNT OF TICKETS USER WILL BUY
+        double payment = 0;   // USED FOR USER PAYMENT
         double change = -1;  // USED FOR PAYMENT CHANGE
 
         // while loop for the whole program
@@ -97,9 +98,15 @@ public class Main {
 
                     System.out.println("Total amount: Php" + transactions.getTotalAmount());
                     System.out.println("Input amount to pay: Php");
-                    while (change < 0) {   // while loop for user input validation. $change must be greater than 0 otherwise program will repeat loop
+                    while (true) {   // while loop for user input validation. $change must be greater than 0 otherwise program will repeat loop
                         try {   // try catch block for user input validation
-                            change = transactions.makePayment(scanner.nextDouble());
+                            payment = scanner.nextDouble();
+                            if (payment > 0 && payment >= transactions.getTotalAmount()) {
+                                change = transactions.makePayment(payment);
+                                break;
+                            } else if (payment < transactions.getTotalAmount()) {
+                                System.out.println(ANSI_RED_BG + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
+                            }
                         } catch (InputMismatchException e) {
                             printInvalidInput();
                             scanner.nextLine();
@@ -109,6 +116,7 @@ public class Main {
                     // prints change
                     System.out.println("Change: Php" + change);
                     System.out.println(ANSI_GREEN + "Thank you for your purchase!" + ANSI_RESET);
+                    payment = 0; // resets payment to 0
                     change = 0; // resets change to 0
                     transactions.setTotalAmount(0);
                 } else {
