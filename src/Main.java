@@ -94,17 +94,20 @@ public class Main {
                     // deducts available tickets of selected movie from user purchase. ($movie.getTicketsAvailable() - $ticketCount)
                     movies[movieChoice - 1].setTicketsAvailable(movies[movieChoice - 1].getTicketsAvailable() - ticketCount);
                     // calculates total amount of selected movie and adds additional price
-                    transactions.setTotalAmount((movies[movieChoice - 1].getPrice() + MOVIE_TYPES[movieTypeChoice - 1].getAdditionalPrice()) * ticketCount);
+                    transactions.setTotalAmount((movies[movieChoice - 1].getPrice() + MOVIE_TYPES[movieTypeChoice - 1].additionalPrice()) * ticketCount);
 
                     System.out.println("Total amount: Php" + transactions.getTotalAmount());
                     System.out.println("Input amount to pay: Php");
-                    while (true) {   // while loop for user input validation. $change must be greater than 0 otherwise program will repeat loop
+                    while (true) {   // while loop for user input validation.
                         try {   // try catch block for user input validation
                             payment = scanner.nextDouble();
+                            // if $payment is not 0 and $payment is greater than the $totalAmount, program continues with payment and sets change
                             if (payment > 0 && payment >= transactions.getTotalAmount()) {
                                 change = transactions.makePayment(payment);
                                 break;
-                            } else if (payment < transactions.getTotalAmount()) {
+                            }
+                            // if $payment is less than $totalAmount, program will repeat loop
+                            else if (payment < transactions.getTotalAmount()) {
                                 System.out.println(ANSI_RED_BG + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
                             }
                         } catch (InputMismatchException e) {
@@ -129,6 +132,7 @@ public class Main {
         }
     }
 
+    // PRINTS A LIST OF MOVIES AND RETURNS USER INPUT
     public static int movieSelector() {
         printMovieList();
         System.out.println("[0] Exit");
@@ -136,6 +140,7 @@ public class Main {
         return scanner.nextInt();
     }
 
+    // PRINTS A LIST OF MOVIES
     public static void printMovieList() {
         System.out.println("What would you like to watch?");
         for (int i = 0; i < movies.length; i++) {
@@ -143,6 +148,7 @@ public class Main {
         }
     }
 
+    // PRINTS A LIST OF MOVIE TYPES AND RETURNS USER INPUT
     public static int movieTypeSelector() {
         printMovieTypes();
         System.out.println("[0] Return");
@@ -150,13 +156,26 @@ public class Main {
         return scanner.nextInt();
     }
 
+    // PRINTS A LIST OF MOVIE TYPES
     public static void printMovieTypes() {
         for (int i = 0; i < MOVIE_TYPES.length; i++) {
-            System.out.println("[" + (i + 1) + "] " + MOVIE_TYPES[i].getType() + " (additional price: Php" + MOVIE_TYPES[i].getAdditionalPrice() + ")");
+            System.out.println("[" + (i + 1) + "] " + MOVIE_TYPES[i].type() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")");
         }
     }
 
+    // PRINTS INVALID INPUT
     public static void printInvalidInput() {
         System.out.println(ANSI_RED_BG + "Invalid input! Please try again." + ANSI_RESET);
     }
 }
+
+//TODO:    What must be found in you code?
+//*        - Variable Declaration
+//*        - Comments
+//*        - Java Operators (Arithmetic, Assigment, Comparison and Logical)
+//?        - String Functions
+//*        - If..else if..else Statement
+//?        - Switch Statement
+//*        - Arrays
+//*        - Loops
+//*        - Methods or Functions
