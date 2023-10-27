@@ -15,7 +15,7 @@ public class TransactionHandler {
             System.out.println(Main.ANSI_RED_BG + "Payment unsuccessful! Please input a proper amount." + Main.ANSI_RESET);
             return -1;
         } else {    // else if payment is more than $totalAmount, program will return payment - $totalAmount
-            System.out.println(Main.ANSI_GREEN + Main.ANSI_GREY_BG + "Payment successful!" + Main.ANSI_RESET);
+            System.out.println(Main.ANSI_ALERT_GREEN + "Payment successful!" + Main.ANSI_RESET);
             return payment - TransactionHandler.totalAmount;
         }
     }

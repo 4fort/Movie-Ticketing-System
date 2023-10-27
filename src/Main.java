@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -5,11 +7,19 @@ public class Main {
     //  !!!  CONSTANT DECLARATIONS   !!!
 
     //  ANSI ESCAPE CODES FOR TERMINAL COLORS
-    public static final String ANSI_RED_BG = "\u001B[41m ";
-    public static final String ANSI_GREEN = "\u001B[42m ";
-    public static final String ANSI_GREY_BG = "\u001b[48;5;237m\u001b[38;5;255m ";
-    //    public static final String ANSI_GREY_BG = "\u001b[48;5;243m";
+    public static final String ANSI_RED_BG = "\u001B[41m";
+    public static final String ANSI_GREEN_BG = "\u001B[42m";
+    public static final String ANSI_BLUE_BG = "\u001B[44m";
+    public static final String ANSI_GREY_DARK_BG = "\u001b[48;5;237m\u001b[38;5;255m";
+    public static final String ANSI_GREY_LIGHT_BG = "\u001b[48;5;250m\u001b[38;5;237m";
+    public static final String ANSI_BOLD = "\033[0;1m";
     public static final String ANSI_RESET = " \u001B[0m";
+    // ANSI COMBINATIONS
+    public static final String ANSI_ALERT_RED = ANSI_RED_BG + " " + ANSI_BOLD + ANSI_GREY_DARK_BG + " ";
+    public static final String ANSI_ALERT_GREEN = ANSI_GREEN_BG + " " + ANSI_BOLD + ANSI_GREY_DARK_BG + " ";
+    public static final String ANSI_ALERT_BLUE_OPEN = ANSI_BLUE_BG + " " + ANSI_BOLD + ANSI_GREY_DARK_BG + " ";
+    public static final String ANSI_ALERT_BLUE_CLOSE = " " + ANSI_BLUE_BG + ANSI_RESET;
+    public static final String ANSI_LIST = ANSI_BOLD + ANSI_GREY_LIGHT_BG;
 
     //  MOVIE TYPES OBJECT ARRAY
     public static final MovieType[] MOVIE_TYPES = {
@@ -20,7 +30,6 @@ public class Main {
 
     //  UTILITY FUNCTIONS
     public static Scanner scanner = new Scanner(System.in);
-
     public static TransactionHandler transactions = new TransactionHandler();   // handles transactions made
 
     //  MOVIES OBJECT ARRAY
@@ -53,13 +62,12 @@ public class Main {
                 } else if (movieChoice <= movies.length) {    // else if user input is 1-5, program will continue
                     // checks if movie tickets is less than or equal to 0 then program will repeat loop
                     if (movies[movieChoice - 1].getTicketsAvailable() <= 0) {
-                        System.out.println(ANSI_RED_BG + "Tickets sold out! Please select another movie." + ANSI_RESET);
+                        System.out.println(ANSI_ALERT_RED + "Tickets sold out! Please select another movie." + ANSI_RESET);
                         continue;
                     }
                     // if above condition is false then program will continue
-                    System.out.println(ANSI_GREEN + ANSI_GREY_BG + "Tickets available!" + ANSI_RESET);
+                    System.out.println(ANSI_ALERT_GREEN + "Tickets available!" + ANSI_RESET);
                     while (true) {  // while loop for user input validation that must be between 1-3
-                        System.out.println("Please select a movie type:");
                         try {   // try catch block for user input validation
                             movieTypeChoice = movieTypeSelector();
                         } catch (InputMismatchException e) {
@@ -68,7 +76,8 @@ public class Main {
                             continue;
                         }
                         if (movieTypeChoice > MOVIE_TYPES.length) { // if user input is not between 1-3, program will repeat loop
-                            printInvalidInput();
+                            System.out.println(ANSI_ALERT_RED + "Select from the following only!" + ANSI_RESET);
+
                             continue;
                         }
                         break;  // if user input is between 1-3, program will continue
@@ -78,7 +87,7 @@ public class Main {
 
                     while (true) {  // while loop for user input validation
                         try {
-                            System.out.println("How many tickets would you like to purchase?: (" + movies[movieChoice - 1].getTicketsAvailable() + ")");
+                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "How many tickets would you like to purchase?: (" + movies[movieChoice - 1].getTicketsAvailable() + " tickets available)" + ANSI_ALERT_BLUE_CLOSE);
                             ticketCount = scanner.nextInt();
                         } catch (InputMismatchException e) {
                             printInvalidInput();
@@ -87,7 +96,7 @@ public class Main {
                         }
                         // if user input is more than available tickets, program will repeat loop
                         if (ticketCount > movies[movieChoice - 1].getTicketsAvailable()) {
-                            System.out.println(ANSI_RED_BG + ANSI_GREY_BG + movies[movieChoice - 1].getTicketsAvailable() + " tickets are left!" + " Please input the right number of tickets." + ANSI_RESET);
+                            System.out.println(ANSI_ALERT_RED + movies[movieChoice - 1].getTicketsAvailable() + " tickets are left!" + " Please input the right number of tickets." + ANSI_RESET);
                             continue;
                         }
                         break;
@@ -99,8 +108,8 @@ public class Main {
 
                     while (true) {   // while loop for user input validation.
                         try {   // try catch block for user input validation
-                            System.out.println("Total amount: " + transactions.getTotalAmount());
-                            System.out.println("Input amount to pay: Php");
+                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "Total amount: " + transactions.getTotalAmount() + ANSI_ALERT_BLUE_CLOSE);
+                            System.out.println(ANSI_ALERT_BLUE_OPEN + "Input amount to pay: Php" + ANSI_ALERT_BLUE_CLOSE);
                             payment = scanner.nextDouble();
                             // if $payment is not 0 and $payment is greater than the $totalAmount, program continues with payment and sets change
                             if (payment > 0 && payment >= transactions.getTotalAmount()) {
@@ -109,7 +118,7 @@ public class Main {
                             }
                             // if $payment is less than $totalAmount, program will repeat loop
                             else if (payment < transactions.getTotalAmount()) {
-                                System.out.println(ANSI_RED_BG + ANSI_GREY_BG + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
+                                System.out.println(ANSI_ALERT_RED + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
                             }
                         } catch (InputMismatchException e) {
                             printInvalidInput();
@@ -121,7 +130,7 @@ public class Main {
                     printReceipt(ticketCount, movieChoice, movieTypeChoice, transactions.getTotalAmount(), payment, change);
                     transactions.setTotalAmount(0);
                 } else {
-                    System.out.println(ANSI_RED_BG + ANSI_GREY_BG + "Select from the following only!" + ANSI_RESET);
+                    System.out.println(ANSI_ALERT_RED + "Select from the following only!" + ANSI_RESET);
                 }
             } catch (InputMismatchException e) {
                 printInvalidInput();
@@ -132,59 +141,60 @@ public class Main {
 
     // PRINTS A LIST OF MOVIES AND RETURNS USER INPUT
     public static int movieSelector() {
+        System.out.println("\n\nWhat would you like to watch?");
         printMovieList();
-        System.out.println("[0] Exit");
-        System.out.print("Enter your choice: ");
+        System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Exit" + ANSI_RESET);
+        System.out.print(ANSI_ALERT_BLUE_OPEN + "Enter your choice:" + ANSI_RESET);
         return scanner.nextInt();
     }
 
     // PRINTS A LIST OF MOVIES
     public static void printMovieList() {
-        System.out.println("What would you like to watch?");
         for (int i = 0; i < movies.length; i++) {
-            System.out.println("[" + (i + 1) + "] " + movies[i].getTitle() + " - Php" + movies[i].getPrice() + " (" + movies[i].getTicketsAvailable() + " available)");
+            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + movies[i].getTitle() + " - Php" + movies[i].getPrice() + " (" + movies[i].getTicketsAvailable() + " available)" + ANSI_RESET);
         }
     }
 
     // PRINTS A LIST OF MOVIE TYPES AND RETURNS USER INPUT
     public static int movieTypeSelector() {
+        System.out.println("\n\nPlease select a movie type:");
         printMovieTypes();
-        System.out.println("[0] Return");
-        System.out.print("Enter your choice: ");
+        System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Return to movie selection" + ANSI_RESET);
+        System.out.print(ANSI_ALERT_BLUE_OPEN + "Enter your choice:" + ANSI_RESET);
         return scanner.nextInt();
     }
 
     // PRINTS A LIST OF MOVIE TYPES
     public static void printMovieTypes() {
         for (int i = 0; i < MOVIE_TYPES.length; i++) {
-            System.out.println("[" + (i + 1) + "] " + MOVIE_TYPES[i].type() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")");
+            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].type() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")" + ANSI_RESET);
         }
     }
 
     // PRINTS INVALID INPUT
     public static void printInvalidInput() {
-        System.out.println(ANSI_RED_BG + ANSI_GREY_BG + "Invalid input! Please try again." + ANSI_RESET);
+        System.out.println(ANSI_ALERT_RED + "Invalid input! Please try again." + ANSI_RESET);
     }
 
     public static void printReceipt(int tickets, int movie, int movieType, double totalAmount, double payment, double change) {
-        System.out.println("\n\n-------------------------------------------------");
+        System.out.println("\n-------------------------------");
         System.out.println("Thank you for your purchase!");
-        System.out.println("Tickets purchased: " + tickets);
-        System.out.println("Movie selected: " + movies[movie - 1].getTitle());
-        System.out.println("Movie type selected: " + MOVIE_TYPES[movieType - 1].type());
-        System.out.println("Total amount: Php" + totalAmount);
-        System.out.println("Payment: Php" + payment);
-        System.out.println("Change: Php" + change);
-        System.out.println("-------------------------------------------------\n\n");
+        System.out.println("Tickets purchased: " + ANSI_BOLD + tickets + ANSI_RESET);
+        System.out.println("Movie selected: " + ANSI_BOLD + movies[movie - 1].getTitle() + ANSI_RESET);
+        System.out.println("Movie type selected: " + ANSI_BOLD + MOVIE_TYPES[movieType - 1].type() + ANSI_RESET);
+        System.out.println("Total amount: " + ANSI_BOLD + "Php" + totalAmount + ANSI_RESET);
+        System.out.println("Payment: " + ANSI_BOLD + "Php" + payment + ANSI_RESET);
+        System.out.println("Change: " + ANSI_BOLD + "Php" + change + ANSI_RESET);
+        System.out.println("-------------------------------\n");
     }
 }
 
 //TODO:    Receipt must display
-//?        - Ticket Purchased
+//*        - Ticket Purchased
 //?        - Quantity
-//?        - Total Amount
-//?        - Amount Paid
-//?        - Change
+//*        - Total Amount
+//*        - Amount Paid
+//*        - Change
 
 //TODO:    What must be found in you code?
 //*        - Variable Declaration
