@@ -1,4 +1,3 @@
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -20,6 +19,7 @@ public class Main {
     public static final String ANSI_ALERT_BLUE_OPEN = ANSI_BLUE_BG + " " + ANSI_BOLD + ANSI_GREY_DARK_BG + " ";
     public static final String ANSI_ALERT_BLUE_CLOSE = " " + ANSI_BLUE_BG + ANSI_RESET;
     public static final String ANSI_LIST = ANSI_BOLD + ANSI_GREY_LIGHT_BG;
+    public static final String ANSI_RECEIPT = ANSI_BOLD + ANSI_GREY_LIGHT_BG;
 
     //  MOVIE TYPES OBJECT ARRAY
     public static final MovieType[] MOVIE_TYPES = {
@@ -30,6 +30,7 @@ public class Main {
 
     //  UTILITY FUNCTIONS
     public static Scanner scanner = new Scanner(System.in);
+    public static NumberFormat nf = NumberFormat.getInstance();
     public static TransactionHandler transactions = new TransactionHandler();   // handles transactions made
 
     //  MOVIES OBJECT ARRAY
@@ -87,7 +88,7 @@ public class Main {
 
                     while (true) {  // while loop for user input validation
                         try {
-                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "How many tickets would you like to purchase?: (" + movies[movieChoice - 1].getTicketsAvailable() + " tickets available)" + ANSI_ALERT_BLUE_CLOSE);
+                            System.out.print("\n\n" + ANSI_ALERT_BLUE_OPEN + "How many tickets would you like to purchase? (" + movies[movieChoice - 1].getTicketsAvailable() + " tickets available):" + ANSI_RESET);
                             ticketCount = scanner.nextInt();
                         } catch (InputMismatchException e) {
                             printInvalidInput();
@@ -108,8 +109,8 @@ public class Main {
 
                     while (true) {   // while loop for user input validation.
                         try {   // try catch block for user input validation
-                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "Total amount: " + transactions.getTotalAmount() + ANSI_ALERT_BLUE_CLOSE);
-                            System.out.println(ANSI_ALERT_BLUE_OPEN + "Input amount to pay: Php" + ANSI_ALERT_BLUE_CLOSE);
+                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "Total amount: " + nf.format(transactions.getTotalAmount()) + ANSI_ALERT_BLUE_CLOSE);
+                            System.out.print(ANSI_ALERT_BLUE_OPEN + "Input amount to pay: " + ANSI_RESET + "Php");
                             payment = scanner.nextDouble();
                             // if $payment is not 0 and $payment is greater than the $totalAmount, program continues with payment and sets change
                             if (payment > 0 && payment >= transactions.getTotalAmount()) {
@@ -177,15 +178,28 @@ public class Main {
     }
 
     public static void printReceipt(int tickets, int movie, int movieType, double totalAmount, double payment, double change) {
-        System.out.println("\n-------------------------------");
-        System.out.println("Thank you for your purchase!");
-        System.out.println("Tickets purchased: " + ANSI_BOLD + tickets + ANSI_RESET);
-        System.out.println("Movie selected: " + ANSI_BOLD + movies[movie - 1].getTitle() + ANSI_RESET);
-        System.out.println("Movie type selected: " + ANSI_BOLD + MOVIE_TYPES[movieType - 1].type() + ANSI_RESET);
-        System.out.println("Total amount: " + ANSI_BOLD + "Php" + totalAmount + ANSI_RESET);
-        System.out.println("Payment: " + ANSI_BOLD + "Php" + payment + ANSI_RESET);
-        System.out.println("Change: " + ANSI_BOLD + "Php" + change + ANSI_RESET);
-        System.out.println("-------------------------------\n");
+//        System.out.println("\n-------------------------------");
+//        System.out.println("Thank you for your purchase!");
+//        System.out.println("Tickets purchased: " + ANSI_BOLD + tickets + ANSI_RESET);
+//        System.out.println("Movie selected: " + ANSI_BOLD + movies[movie - 1].getTitle() + ANSI_RESET);
+//        System.out.println("Movie type selected: " + ANSI_BOLD + MOVIE_TYPES[movieType - 1].type() + ANSI_RESET);
+//        System.out.println("Total amount: " + ANSI_BOLD + "Php" + nf.format(totalAmount) + ANSI_RESET);
+//        System.out.println("Payment: " + ANSI_BOLD + "Php" + nf.format(payment) + ANSI_RESET);
+//        System.out.println("Change: " + ANSI_BOLD + "Php" + nf.format(change) + ANSI_RESET);
+//        System.out.println("-------------------------------\n");
+
+        System.out.printf(ANSI_GREY_LIGHT_BG + " --------------------------------------------" + ANSI_RESET + "\n");
+        System.out.printf(ANSI_GREY_LIGHT_BG + " |        Thank you for your purchase!      |" + ANSI_RESET + "\n");
+        System.out.printf(ANSI_GREY_LIGHT_BG + " |                                          |" + ANSI_RESET + "\n");
+
+        System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Tickets purchased", tickets, ANSI_RESET);
+        System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Movie selected", movies[movie - 1].getTitle(), ANSI_RESET);
+        System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Movie Type Selected", MOVIE_TYPES[movieType - 1].type(), ANSI_RESET);
+        System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Total Amount (Php)", totalAmount, ANSI_RESET);
+        System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Payment (Php)", payment, ANSI_RESET);
+        System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Change (Php)", change, ANSI_RESET);
+
+        System.out.printf(ANSI_GREY_LIGHT_BG + " --------------------------------------------" + ANSI_RESET + "\n");
     }
 }
 
