@@ -23,9 +23,9 @@ public class Main {
 
     //  MOVIE TYPES OBJECT ARRAY
     public static final MovieType[] MOVIE_TYPES = {
-            new MovieType("IMAX", 100),
-            new MovieType("3D", 200),
-            new MovieType("IMAX 3D", 250)
+            new MovieType("imax", 100),
+            new MovieType("3d", 200),
+            new MovieType("imax 3d", 250)
     };
 
     //  UTILITY FUNCTIONS
@@ -87,49 +87,62 @@ public class Main {
                         continue; // if user input is 0, program go back to main menu (previous loop)
 
                     while (true) {  // while loop for user input validation
+                        System.out.println("\n\n");
+                        printReturnToMenu();
                         try {
-                            System.out.print("\n\n" + ANSI_ALERT_BLUE_OPEN + "How many tickets would you like to purchase? (" + movies[movieChoice - 1].getTicketsAvailable() + " tickets available):" + ANSI_RESET);
+                            System.out.print(ANSI_ALERT_BLUE_OPEN + "How many tickets would you like to purchase? (" + movies[movieChoice - 1].getTicketsAvailable() + " tickets available):" + ANSI_RESET);
+
                             ticketCount = scanner.nextInt();
                         } catch (InputMismatchException e) {
                             printInvalidInput();
                             scanner.nextLine();
                             continue;
                         }
-                        // if user input is more than available tickets, program will repeat loop
+                        // if user input is more than the available tickets, program will repeat current loop
                         if (ticketCount > movies[movieChoice - 1].getTicketsAvailable()) {
                             System.out.println(ANSI_ALERT_RED + movies[movieChoice - 1].getTicketsAvailable() + " tickets are left!" + " Please input the right number of tickets." + ANSI_RESET);
                             continue;
                         }
                         break;
                     }
-                    // deducts available tickets of selected movie from user purchase. ($movie.getTicketsAvailable() - $ticketCount)
-                    movies[movieChoice - 1].setTicketsAvailable(movies[movieChoice - 1].getTicketsAvailable() - ticketCount);
-                    // calculates total amount of selected movie and adds additional price
+                    if (ticketCount == 0) continue; // if user inputs 0, it will return to menu
+
+                    // calculates overall amount of selected movie plus the movie type additional price
                     transactions.setTotalAmount((movies[movieChoice - 1].getPrice() + MOVIE_TYPES[movieTypeChoice - 1].additionalPrice()) * ticketCount);
 
                     while (true) {   // while loop for user input validation.
+                        System.out.println("\n\n");
+                        printReturnToMenu();
                         try {   // try catch block for user input validation
-                            System.out.println("\n\n" + ANSI_ALERT_BLUE_OPEN + "Total amount: " + nf.format(transactions.getTotalAmount()) + ANSI_ALERT_BLUE_CLOSE);
+                            System.out.println(ANSI_ALERT_BLUE_OPEN + "Total amount: " + nf.format(transactions.getTotalAmount()) + ANSI_ALERT_BLUE_CLOSE);
                             System.out.print(ANSI_ALERT_BLUE_OPEN + "Input amount to pay: " + ANSI_RESET + "Php");
                             payment = scanner.nextDouble();
                             // if $payment is not 0 and $payment is greater than the $totalAmount, program continues with payment and sets change
-                            if (payment > 0 && payment >= transactions.getTotalAmount()) {
-                                change = transactions.makePayment(payment);
-                                break;
-                            }
+//                            if (payment >= transactions.getTotalAmount()) {
+//                                change = transactions.makePayment(payment);
+//                                break;
+//                            }
                             // if $payment is less than $totalAmount, program will repeat loop
-                            else if (payment < transactions.getTotalAmount()) {
-                                System.out.println(ANSI_ALERT_RED + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
-                            }
+//                            else if (payment < transactions.getTotalAmount()) {
+//                                System.out.println(ANSI_ALERT_RED + "Payment unsuccessful! Please input a proper amount." + ANSI_RESET);
+//                            }
+                            change = transactions.makePayment(payment);
+                            if (transactions.isSuccess()) break;
+                            else if (payment == 0) break;
                         } catch (InputMismatchException e) {
                             printInvalidInput();
                             scanner.nextLine();
                         }
                     }
 
-                    // prints receipt
-                    printReceipt(ticketCount, movieChoice, movieTypeChoice, transactions.getTotalAmount(), payment, change);
-                    transactions.setTotalAmount(0);
+                    if (transactions.isSuccess()) {
+                        // deducts available tickets of selected movie from user purchase. ($movie.getTicketsAvailable() - $ticketCount)
+                        movies[movieChoice - 1].setTicketsAvailable(movies[movieChoice - 1].getTicketsAvailable() - ticketCount);
+
+                        // prints receipt
+                        printReceipt(ticketCount, movieChoice, movieTypeChoice, transactions.getTotalAmount(), payment, change);
+                        transactions.setTotalAmount(0);
+                    }
                 } else {
                     System.out.println(ANSI_ALERT_RED + "Select from the following only!" + ANSI_RESET);
                 }
@@ -160,7 +173,7 @@ public class Main {
     public static int movieTypeSelector() {
         System.out.println("\n\nPlease select a movie type:");
         printMovieTypes();
-        System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Return to movie selection" + ANSI_RESET);
+        printReturnToMenu();
         System.out.print(ANSI_ALERT_BLUE_OPEN + "Enter your choice:" + ANSI_RESET);
         return scanner.nextInt();
     }
@@ -168,13 +181,17 @@ public class Main {
     // PRINTS A LIST OF MOVIE TYPES
     public static void printMovieTypes() {
         for (int i = 0; i < MOVIE_TYPES.length; i++) {
-            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].type() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")" + ANSI_RESET);
+            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].type().toUpperCase() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")" + ANSI_RESET);
         }
     }
 
     // PRINTS INVALID INPUT
     public static void printInvalidInput() {
         System.out.println(ANSI_ALERT_RED + "Invalid input! Please try again." + ANSI_RESET);
+    }
+
+    public static void printReturnToMenu() {
+        System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Return to movie selection" + ANSI_RESET);
     }
 
     public static void printReceipt(int tickets, int movie, int movieType, double totalAmount, double payment, double change) {
@@ -189,12 +206,12 @@ public class Main {
 //        System.out.println("-------------------------------\n");
 
         System.out.printf(ANSI_GREY_LIGHT_BG + " --------------------------------------------" + ANSI_RESET + "\n");
-        System.out.printf(ANSI_GREY_LIGHT_BG + " |        Thank you for your purchase!      |" + ANSI_RESET + "\n");
+        System.out.printf(ANSI_RECEIPT + " |              FORT MOVIE THEATRE          |" + ANSI_RESET + "\n");
         System.out.printf(ANSI_GREY_LIGHT_BG + " |                                          |" + ANSI_RESET + "\n");
 
         System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Tickets purchased", tickets, ANSI_RESET);
         System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Movie selected", movies[movie - 1].getTitle(), ANSI_RESET);
-        System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Movie Type Selected", MOVIE_TYPES[movieType - 1].type(), ANSI_RESET);
+        System.out.printf("%s | %-20s%20s |%s%n", ANSI_RECEIPT, "Movie Type Selected", MOVIE_TYPES[movieType - 1].type().toUpperCase(), ANSI_RESET);
         System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Total Amount (Php)", totalAmount, ANSI_RESET);
         System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Payment (Php)", payment, ANSI_RESET);
         System.out.printf("%s | %-20s%,20.2f |%s%n", ANSI_RECEIPT, "Change (Php)", change, ANSI_RESET);
