@@ -22,25 +22,25 @@ public class Main {
     public static final String ANSI_RECEIPT = ANSI_BOLD + ANSI_GREY_LIGHT_BG;
 
     //  MOVIE TYPES OBJECT ARRAY
-    public static final MovieType[] MOVIE_TYPES = {
+    private static final MovieType[] MOVIE_TYPES = {
+            new MovieType("regular", 0),
             new MovieType("imax", 100),
             new MovieType("3d", 200),
             new MovieType("imax 3d", 250)
     };
-
-    //  UTILITY FUNCTIONS
-    public static Scanner scanner = new Scanner(System.in);
-    public static NumberFormat nf = NumberFormat.getInstance();
-    public static TransactionHandler transactions = new TransactionHandler();   // handles transactions made
-
+    private static final TransactionHandler transactions = new TransactionHandler();   // handles transactions made
+    private static final ServiceRater serviceRater = new ServiceRater();   // handles service rating
     //  MOVIES OBJECT ARRAY
-    public static Movie[] movies = {
+    private static final Movie[] movies = {
             new Movie("Interstellar", 200, 25),
             new Movie("The Matrix", 300, 30),
             new Movie("The Godfather", 380, 80),
             new Movie("The Joker", 250, 20),
             new Movie("If Only", 400, 15)
     };
+    //  UTILITY FUNCTIONS
+    static Scanner scanner = new Scanner(System.in);
+    static NumberFormat nf = NumberFormat.getInstance();
 
     public static void main(String[] args) {
         //  DECLARATIONS OF VARIABLES
@@ -146,6 +146,7 @@ public class Main {
                 } else {
                     System.out.println(ANSI_ALERT_RED + "Select from the following only!" + ANSI_RESET);
                 }
+                serviceRater.printRateService();
             } catch (InputMismatchException e) {
                 printInvalidInput();
                 scanner.nextLine();
@@ -156,6 +157,9 @@ public class Main {
     // PRINTS A LIST OF MOVIES AND RETURNS USER INPUT
     static int movieSelector() {
         System.out.println("\n\nWhat would you like to watch?");
+        if (serviceRater.getServiceRatings() != 0) {
+            serviceRater.printServiceRatings();
+        }
         printMovieList();
         System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Exit" + ANSI_RESET);
         System.out.print(ANSI_ALERT_BLUE_OPEN + "Enter your choice:" + ANSI_RESET);
