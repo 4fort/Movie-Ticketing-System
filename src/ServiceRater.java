@@ -47,10 +47,6 @@ public class ServiceRater {
         System.out.println(Main.ANSI_ALERT_GREEN + "Thank you for taking your time to rate the service!" + Main.ANSI_RESET);
     }
 
-    private void rateHandler() {
-
-    }
-
     public void printServiceRatings() {
         System.out.print("Service rating: ");
         switch ((int) getServiceRatings()) {
