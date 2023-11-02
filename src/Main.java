@@ -154,7 +154,7 @@ public class Main {
     }
 
     // PRINTS A LIST OF MOVIES AND RETURNS USER INPUT
-    public static int movieSelector() {
+    static int movieSelector() {
         System.out.println("\n\nWhat would you like to watch?");
         printMovieList();
         System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Exit" + ANSI_RESET);
@@ -163,14 +163,14 @@ public class Main {
     }
 
     // PRINTS A LIST OF MOVIES
-    public static void printMovieList() {
+    static void printMovieList() {
         for (int i = 0; i < movies.length; i++) {
             System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + movies[i].getTitle() + " - Php" + movies[i].getPrice() + " (" + movies[i].getTicketsAvailable() + " available)" + ANSI_RESET);
         }
     }
 
     // PRINTS A LIST OF MOVIE TYPES AND RETURNS USER INPUT
-    public static int movieTypeSelector() {
+    static int movieTypeSelector() {
         System.out.println("\n\nPlease select a movie type:");
         printMovieTypes();
         printReturnToMenu();
@@ -179,22 +179,22 @@ public class Main {
     }
 
     // PRINTS A LIST OF MOVIE TYPES
-    public static void printMovieTypes() {
+    static void printMovieTypes() {
         for (int i = 0; i < MOVIE_TYPES.length; i++) {
             System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].type().toUpperCase() + " (additional price: Php" + MOVIE_TYPES[i].additionalPrice() + ")" + ANSI_RESET);
         }
     }
 
     // PRINTS INVALID INPUT
-    public static void printInvalidInput() {
+    static void printInvalidInput() {
         System.out.println(ANSI_ALERT_RED + "Invalid input! Please try again." + ANSI_RESET);
     }
 
-    public static void printReturnToMenu() {
+    static void printReturnToMenu() {
         System.out.println(ANSI_BOLD + ANSI_RED_BG + "[0]" + ANSI_GREY_DARK_BG + " Return to movie selection" + ANSI_RESET);
     }
 
-    public static void printReceipt(int tickets, int movie, int movieType, double totalAmount, double payment, double change) {
+    static void printReceipt(int tickets, int movie, int movieType, double totalAmount, double payment, double change) {
 //        System.out.println("\n-------------------------------");
 //        System.out.println("Thank you for your purchase!");
 //        System.out.println("Tickets purchased: " + ANSI_BOLD + tickets + ANSI_RESET);
@@ -222,7 +222,7 @@ public class Main {
 
 //TODO:    Receipt must display
 //*        - Ticket Purchased
-//?        - Quantity
+//*        - Quantity
 //*        - Total Amount
 //*        - Amount Paid
 //*        - Change
@@ -231,7 +231,7 @@ public class Main {
 //*        - Variable Declaration
 //*        - Comments
 //*        - Java Operators (Arithmetic, Assigment, Comparison and Logical)
-//?        - String Functions
+//*        - String Functions
 //*        - If..else if..else Statement
 //?        - Switch Statement
 //*        - Arrays
