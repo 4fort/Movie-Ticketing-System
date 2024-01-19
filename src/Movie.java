@@ -1,12 +1,9 @@
 public class Movie {
     private final String title;
-    private final float price;
     private int ticketsAvailable;
 
-    public Movie(String title, float price, int ticketsAvailable) {
-
+    public Movie(String title, int ticketsAvailable) {
         this.title = title;
-        this.price = price;
         this.ticketsAvailable = ticketsAvailable;
     }
 
@@ -15,14 +12,20 @@ public class Movie {
     }
 
     public float getPrice() {
-        return this.price;
+        return 100.0f;
     }
 
     public int getTicketsAvailable() {
         return this.ticketsAvailable;
     }
+
     void setTicketsAvailable(int ticketsAvailable) {
         this.ticketsAvailable = ticketsAvailable;
+    }
+
+    void getMovieDetails() {
+        System.out.println("Title: " + this.title);
+        System.out.println("Tickets Available: " + this.ticketsAvailable);
     }
 
 }
