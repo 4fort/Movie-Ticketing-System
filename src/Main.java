@@ -60,6 +60,14 @@ public class Main {
             new MovieImax("If Only", 400)
     };
 
+    public static Movie3d[] threeDMovies = {
+            new Movie3d("Interstellar", 200),
+            new Movie3d("The Matrix", 300),
+            new Movie3d("The Godfather", 380),
+            new Movie3d("The Joker", 250),
+            new Movie3d("If Only", 400)
+    };
+
     public static MovieImax3d[] imax3dMovies = {
             new MovieImax3d("Interstellar", 200),
             new MovieImax3d("The Matrix", 300),
@@ -69,7 +77,7 @@ public class Main {
     };
 
     public static Movie[][] movies = {
-            regularMovies, imaxMovies, imax3dMovies
+            regularMovies, imaxMovies, threeDMovies, imax3dMovies
     };
 
 
@@ -77,10 +85,10 @@ public class Main {
         //  DECLARATIONS OF VARIABLES
         boolean isContinue = true;  // USED FOR WHILE LOOP CONDITION
         int movieChoice;    // USED FOR $movies[] (1-5) CHOICE USER INPUT
-        int movieTypeChoice = 0; // USED FOR $MOVIE_TYPE[] (1-3) CHOICE USER INPUT
-        int ticketCount = 0;    // USED FOR AMOUNT OF TICKETS USER WILL BUY
-        double payment = 0;   // USED FOR USER PAYMENT
-        double change = -1;  // USED FOR PAYMENT CHANGE
+        int movieTypeChoice; // USED FOR $MOVIE_TYPE[] (1-3) CHOICE USER INPUT
+        int ticketCount;    // USED FOR AMOUNT OF TICKETS USER WILL BUY
+        double payment;   // USED FOR USER PAYMENT
+        double change;  // USED FOR PAYMENT CHANGE
 
         // while loop for the whole program
         while (isContinue) {
@@ -184,7 +192,7 @@ public class Main {
                             movieChoice = movieSelector(movieTypeChoice);
                             if (movieChoice == 0) {
                                 break;
-                            } else if (movieChoice <= movies[movieTypeChoice - 1].length) {
+                            } else if (movieChoice > 0 && movieChoice <= movies[movieTypeChoice - 1].length) {
                                 if (movies[movieTypeChoice - 1][movieChoice - 1].getTicketsAvailable() <= 0) {
                                     System.out.println(ANSI_ALERT_RED + "Tickets sold out! Please select another movie." + ANSI_RESET);
                                 } else {
@@ -198,6 +206,9 @@ public class Main {
                             printInvalidInput();
                             scanner.nextLine();
                         }
+                    }
+                    if (movieChoice == 0) {
+                        continue;
                     }
                     while (true) {   // while loop for ticket purchase
                         try {
@@ -259,7 +270,6 @@ public class Main {
 
     // PRINTS A LIST OF MOVIES
     public static void printMovieList(int movieTypeChoice) {
-        System.out.println("What would you like to watch?");
         for (int i = 0; i < movies[movieTypeChoice - 1].length; i++) {
             System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + movies[movieTypeChoice - 1][i].getTitle() + " - " + movies[movieTypeChoice - 1][i].getPrice() + " (" + movies[movieTypeChoice - 1][i].getTicketsAvailable() + " available)" + ANSI_RESET);
         }
@@ -277,7 +287,7 @@ public class Main {
     // PRINTS A LIST OF MOVIE TYPES
     public static void printMovieTypes() {
         for (int i = 0; i < MOVIE_TYPES.length; i++) {
-            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].type() + " (additional price: Php" + MOVIE_TYPES[i].getTotalPrice() + ")" + ANSI_RESET);
+            System.out.println(ANSI_LIST + "[" + (i + 1) + "]" + ANSI_GREY_DARK_BG + " " + MOVIE_TYPES[i].getType() + " (price: Php" + MOVIE_TYPES[i].getTotalPrice() + ")" + ANSI_RESET);
         }
     }
 
